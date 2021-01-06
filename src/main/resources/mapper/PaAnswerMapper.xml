@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.test_swagger.mapper.PaAnswerMapper">
+
+
+    <insert id="saveAnswer">
+        INSERT INTO pa_answer
+        (id, answer_right, answer_code, answer_content, subject_id)
+        VALUES
+        (#{id}, #{answerRight}, #{answerCode}, #{answerContent}, #{subjectId})
+    </insert>
+
+
+</mapper>

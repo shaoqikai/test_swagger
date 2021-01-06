@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * @author 邵祺锴
+ * @author shaoqk
  * @create 2020-01-15 14:03
  */
 @Api(value = "KaiController", tags = {"测试接口模板"})

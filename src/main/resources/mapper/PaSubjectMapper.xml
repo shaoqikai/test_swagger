@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.test_swagger.mapper.PaSubjectMapper">
+
+    <sql id="allColumn">
+        t1.id, t1.creator, t1.created_time, t1.updated_time, t1.subject_no, t1.subject_content, t1.answer_id, t1.answer_code, t1.answer_content    </sql>
+
+    <insert id="saveAndSelectId">
+        <!--<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+            select LAST_INSERT_ID()
+        </selectKey>-->
+        <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO pa_subject
+        (id,
+        subject_content,answer_code,answer_content)
+        VALUES
+        (#{id},
+        #{subjectContent}, #{answerCode}, #{answerContent})
+    </insert>
+
+
+    <select id="findBySubjectContent" resultType="java.lang.Integer">
+        SELECT
+            id
+        FROM
+            `pa_subject` t1
+            where
+            t1.subject_content = #{subjectContent}
+    </select>
+    <select id="subjectAll" resultType="com.example.test_swagger.entity.PaSubjectQueryDTOTwo">
+        SELECT
+            a.subject_content,
+            REPLACE ( GROUP_CONCAT( b.answer_content ), ',', '/' ) AS answer_content,
+            a.answer_code,
+            a.answer_content answer_right,
+            REPLACE ( GROUP_CONCAT( b.answer_code ), ',', '/' ) AS codes
+        FROM
+            pa_answer b
+            LEFT JOIN pa_subject a ON a.id = b.subject_id
+        GROUP BY
+            a.subject_content;
+    </select>
+
+</mapper>

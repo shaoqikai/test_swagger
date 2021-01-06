@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.test_swagger.mapper.PaAnswerRecordMapper">
+
+
+    <insert id="save">
+      INSERT INTO pa_answer_record
+        (id, address,points)
+        VALUES
+        (#{id}, #{address},#{points})
+    </insert>
+    <select id="getAnswerRaking" resultType="com.example.test_swagger.entity.PaAnswerRecordDTO">
+        SELECT
+            @curRank := @curRank + 1 AS raking,
+            t1.address,
+            count( 1 ) allNumber
+        FROM
+            pa_answer_record t1,
+            ( SELECT @curRank := 0 ) q
+        WHERE
+            t1.data_status = '1'
+            AND t1.record_status = '1'
+        <if test="screenYear == 0">
+            AND DATE_FORMAT(t1.record_time,'%Y-%m') = DATE_FORMAT(CURDATE(),'%Y-%m')
+        </if>
+        <if test="screenYear == 1">
+            AND DATE_FORMAT(t1.record_time,'%Y-%m-%d') = YEAR(NOW())
+        </if>
+        GROUP BY
+            t1.address
+            LIMIT 20
+    </select>
+    <select id="getAnswerStatistics" resultType="com.example.test_swagger.entity.PaAnswerRecordDTO">
+        SELECT
+            count( 1 ) allNumber,
+            t1.address
+        FROM
+            pa_answer_record t1
+        WHERE
+          t1.record_status &lt;&gt; '2'
+        GROUP BY
+         t1.address
+    </select>
+
+    <select id="answerDaysFrom" resultType="com.example.test_swagger.entity.PaAnswerRecordDTO">
+        SELECT
+            t.deteLine,
+            -- 	t.num tnum,
+            -- 	y.num ynum,
+            CASE
+
+            WHEN y.num IS NULL
+            OR y.num = 0 THEN
+            0.00 ELSE round( ( t.num - y.num ) / y.num * 100, 2 )
+            END ringRatio
+        FROM
+            ( SELECT date_format( created_time, '%Y-%m-%d' ) deteLine, count( 1 ) num FROM pa_answer_record GROUP BY date_format( created_time, '%Y-%m-%d' ) ) t
+            LEFT JOIN (
+            SELECT
+            date_format( created_time, '%Y-%m-%d' ) today,
+            date_add( date_format( created_time, '%Y-%m-%d' ), INTERVAL 1 DAY ) tomorrow,-- 对当前日期+1 , 然后以此字段做关联 , 即可得出A表中这个日期的数量(就是A表中对应的记录前一天的数据)
+            count( 1 ) num
+            FROM
+            pa_answer_record
+            GROUP BY
+            date_format( created_time, '%Y-%m-%d' )
+            ) y ON t.deteLine = y.tomorrow
+        WHERE
+            DATE_SUB( CURDATE( ), INTERVAL 7 DAY ) &lt;= date( t.deteLine )
+        ORDER BY
+            t.deteLine DESC
+    </select>
+
+    <!-- 本期数 -->
+    <select id="answerToDay" resultType="com.example.test_swagger.entity.PaAnswerRecordDTO">
+        SELECT
+            DATE( created_time ) AS toDay,
+            COUNT( 1 ) AS toDayCount
+        FROM
+            pa_answer_record
+        WHERE
+            DATE_SUB( CURDATE( ), INTERVAL 1 WEEK ) &lt;= DATE( created_time )
+            GROUP BY
+            toDay
+        ORDER BY
+            toDay ASC
+    </select>
+
+    <!-- 上期数 -->
+    <select id="answerYesterday" resultType="com.example.test_swagger.entity.PaAnswerRecordDTO">
+        SELECT
+            DATE( created_time ) AS yesterDay,
+            COUNT( 1 ) AS yesterDayCount
+        FROM
+            pa_answer_record
+        WHERE
+            DATE_SUB( CURDATE( )-1, INTERVAL 1 WEEK ) &lt;= DATE( created_time )
+            AND DATE_FORMAT( NOW( ), '%Y-%m-%d' ) &lt;&gt; DATE_FORMAT( created_time, '%Y-%m-%d' )
+            GROUP BY
+            yesterDay
+        ORDER BY
+            yesterDay ASC
+    </select>
+
+
+</mapper>

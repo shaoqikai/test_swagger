@@ -21,7 +21,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 /**
- * @author 邵祺锴
+ * @author shaoqk
  * @create 2020-01-15 15:55
  */
 public class ExportUtils {
