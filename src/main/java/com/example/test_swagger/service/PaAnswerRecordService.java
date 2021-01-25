@@ -191,7 +191,6 @@ public class PaAnswerRecordService {
                 dayMap.put(item.getDeteLine(),item);
             }
         }
-
         return dayMap;
     }
 

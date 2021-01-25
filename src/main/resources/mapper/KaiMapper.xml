@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.test_swagger.mapper.KaiMapper">
+    <insert id="insertUser">
+
+    </insert>
+
+    <update id="updateUser">
+
+    </update>
 
     <select id="findAll" resultType="com.example.test_swagger.entity.TbBrand">
       select * from tb_brand
+    </select>
+    <!--根据id查询用户信息-->
+    <select id="selectById" resultType="com.example.test_swagger.entity.SysUser">
+
     </select>
 </mapper>

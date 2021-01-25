@@ -1,5 +1,6 @@
 package com.example.test_swagger.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
  * @create 2020-12-16 13:36
  */
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
 public class PaAnswer {
     private static final long serialVersionUID = 1L;

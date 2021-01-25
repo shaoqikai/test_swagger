@@ -1,10 +1,7 @@
 package com.example.test_swagger.controller;
 
 import com.example.test_swagger.commont.ReturnInfo;
-import com.example.test_swagger.entity.PaAnswerQueryRightDTO;
-import com.example.test_swagger.entity.PaAnswerRecordAddDTO;
-import com.example.test_swagger.entity.PaAnswerRecordDTO;
-import com.example.test_swagger.entity.PaAnswerYear;
+import com.example.test_swagger.entity.*;
 import com.example.test_swagger.service.PaAnswerRecordService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.annotations.Api;
@@ -17,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -116,10 +112,10 @@ public class PaAnswerRecordController {
         return paAnswerRecordService.answerDaysFrom();
     }
 
-
-    public static void main(String[] args) throws ParseException {
-        System.out.println("helloword");
+    public static void main(String[] args) {
+        PaAnswer paAnswer = new PaAnswer(1,"12","B",23,1,12,"上海");
+        Integer poris = 10 * 3 + (10 - 10);
+        System.out.println(poris);
 
     }
-
 }
