@@ -1,6 +1,7 @@
 package com.example.test_swagger.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.test_swagger.config.CacheResult;
 import com.example.test_swagger.entity.SysUser;
 import com.example.test_swagger.entity.TbBrand;
 import com.example.test_swagger.mapper.KaiMapper;
@@ -99,6 +100,7 @@ public class KaiService {
      * @param user
      * @return
      */
+    @CacheResult(key = "method-key")
     public SysUser insertUser(SysUser user) {
         SysUser userOld = mapper.selectById(user.getOpenId());
         if (userOld == null) {
