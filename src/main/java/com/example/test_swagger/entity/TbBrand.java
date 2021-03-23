@@ -1,5 +1,6 @@
 package com.example.test_swagger.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
@@ -7,10 +8,9 @@ import lombok.Data;
  * @create 2020-01-15 14:09
  */
 @Data
+@AllArgsConstructor
 public class TbBrand {
-    private int id;
-    private String name;
-    private String image;
-    private String letter;
+    private Integer num;
+    private String sevenDay;
 
 }
