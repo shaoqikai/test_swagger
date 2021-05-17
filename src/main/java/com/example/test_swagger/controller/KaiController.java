@@ -14,8 +14,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.math.BigInteger;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author shaoqk
@@ -69,74 +74,34 @@ public class KaiController {
         return ReturnInfo.oJ8K().put("result", byName);
     }
 
+    public static List<String> getMonthList(Integer num) {
+        List<String> list = new ArrayList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+        for (int i = num; i > 0; i--) {
+            Calendar calendar = Calendar.getInstance();
+            //获取当前时间的前6个月
+            calendar.add(Calendar.MONTH, -i);
+            //将calendar装换为Date类型
+            Date date = calendar.getTime();
+            System.out.println(sdf.format(date));
+            list.add(sdf.format(date));
+        }
+        return list;
+    }
 
-    public static void main(String[] args) {
-//        List<Map<String, Object>> dataList = page.getResult();
-//        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-//        Map<String, Object> map1 = new HashMap<String, Object>();
-//        map1.put("id", 1);
-//        map1.put("value", 2);
-//        list.add(map1);
-//
-//        Map<String, Object> map2 = new HashMap<String, Object>();
-//        map2.put("id", 1);
-//        map2.put("value", 5);
-//        list.add(map2);
-//
-//        Map<String, Object> map3 = new HashMap<String, Object>();
-//        map3.put("id", 2);
-//        map3.put("value", 5);
-//        list.add(map3);
-//
-//        Map<String, Object> map4 = new HashMap<String, Object>();
-//        map4.put("id", 2);
-//        map4.put("value", 4);
-//        list.add(map4);
-//
-//        Map<String, Object> map5 = new HashMap<String, Object>();
-//        map5.put("id", 1);
-//        map5.put("value", 4);
-//        list.add(map5);
-//
-//        //id相等value相加（合并id相同数据）
-//        System.out.println("原始数据："+list);
-//
-//        //方法一
-//        Map<String, Object> result1 = new HashMap<String, Object>();
-//        for(Map<String, Object> map : list){
-//            String id = map.get("id").toString();
-//            Long value = Long.parseLong(map.get("value").toString());
-//            if(result1.containsKey(id)){
-//                Long temp = Long.parseLong(result1.get(id).toString());
-//                value += temp;
-//            }
-//            result1.put(id, value);
-//        }
-//        System.out.println("合并后的数据："+result1);
+    public static void main(String[] args)  {
+        String regExp = "^0?1[3456789]\\d{9}$";//判断手机号
+        Pattern pattern = Pattern.compile(regExp);
+        String regExp2 = "^([0-9]{3,4})?(-)?[0-9]{7,8}$";//判断座机
+        Pattern pattern2 = Pattern.compile(regExp2);
+        Matcher mc = pattern.matcher("19722187902");
+        Matcher mc2 = pattern2.matcher("0471-8879213");
 
-        //方法二
-//        Map<String, Map<String, Object>> result2 = new HashMap<String, Map<String,Object>>();
-//        for(Map<String, Object> map : list){
-//            String id = map.get("id").toString();
-//            Long value = Long.parseLong(map.get("value").toString());
-//            if(result2.containsKey(id)){
-//                Long temp = Long.parseLong(result2.get(id).get("value").toString());
-//                value += temp;
-//                result2.get(id).put("value", value);
-//                continue;
-//            }
-//            result2.put(id, map);
-//        }
-//        System.out.println("合并后的数据2："+result2);
-//        String cc = "1,11,20,147,665";
-//        String[] split = cc.split(",");
-//        List<String> resultList= new ArrayList<>(Arrays.asList(cc.split(",")));
-//        System.out.println(resultList.toString());
-
-        Integer a = 999999999;
-        BigInteger bigInteger = new BigInteger("99999999999999999999999999999999999999999999999");
-        System.out.println(a);
-        System.out.println(bigInteger);
+        if ((mc.matches() || mc2.matches())) {
+            System.out.println("正确");
+        } else {
+            System.err.println("正确");
+        }
     }
 
 }

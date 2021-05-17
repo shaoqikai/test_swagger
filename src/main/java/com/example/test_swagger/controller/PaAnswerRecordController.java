@@ -3,6 +3,7 @@ package com.example.test_swagger.controller;
 import com.example.test_swagger.commont.ReturnInfo;
 import com.example.test_swagger.entity.*;
 import com.example.test_swagger.service.PaAnswerRecordService;
+import com.example.test_swagger.utils.DateUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -15,8 +16,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+
+import static io.lettuce.core.LettuceStrings.string;
 
 
 /**
@@ -30,7 +33,6 @@ public class PaAnswerRecordController {
 
     @Autowired
     private PaAnswerRecordService paAnswerRecordService;
-
 
     @ApiOperation(value = "新增答题记录表", consumes = MediaType.APPLICATION_JSON_VALUE)
     @PostMapping(value = "/v1/saveAnswer")
@@ -139,21 +141,15 @@ public class PaAnswerRecordController {
 //        System.out.println("type为1---------" + between);
 //        PortrayQuery query = new PortrayQuery();
 //        System.out.println(decideStatisticType(query).toString()+"----------------------------------------");
-        List<PortrayQuery> result = new ArrayList<>();
-        result.add(new PortrayQuery(2,"2020-12-15"));
-        result.add(new PortrayQuery(11,"2020-12-16"));
-        result.add(new PortrayQuery(1,"2020-12-17"));
-        result.add(new PortrayQuery(29,"2020-12-18"));
-        result.add(new PortrayQuery(1,"2021-01-19"));
-        result.add(new PortrayQuery(2,"2021-01-20"));
-        result.add(new PortrayQuery(33,"2021-03-21"));
-        Map<String, Object> map = new HashMap<>();
-//        List<String> list = getMonthBetween("2020-02-01","2021-03-01");
-//        for(String s : list){
-//            System.out.println("日期："+s);
-//        }
-//       String a = "60";
-//        System.out.println(a.substring(0, 1));
+//        List<PortrayQuery> result = new ArrayList<>();
+//        result.add(new PortrayQuery(2, "2020-12-15"));
+//        result.add(new PortrayQuery(11, "2020-12-16"));
+//        result.add(new PortrayQuery(1, "2020-12-17"));
+//        result.add(new PortrayQuery(29, "2020-12-18"));
+//        result.add(new PortrayQuery(1, "2021-01-19"));
+//        result.add(new PortrayQuery(2, "2021-01-20"));
+//        result.add(new PortrayQuery(33, "2021-03-21"));
+//        Map<String, Object> map = new HashMap<>();
 
 //
 //        List<TbBrand> list = new ArrayList<>();
@@ -175,167 +171,39 @@ public class PaAnswerRecordController {
 //        list.add(new TbBrand(5, "2021-03-07"));
 //        list.add(new TbBrand(3, "2021-03-07"));
 //        list.add(new TbBrand(4, "2021-03-07"));
-//        Integer count = 0;
-//        for (TbBrand tbBrand : list) {
-//            count += tbBrand.getNum();
-//        }
-//        System.out.println(count);
-//        count = 0;
+//        int count =0;
 //        for (TbBrand tbBrand : list2) {
-//            count += tbBrand.getNum();
+//             count += tbBrand.getNum() ;
 //        }
 //        System.out.println(count);
+//        Integer score0 = 0;
 //
-//        for (int i = 0; i < list.size() - 1; i++) {
-//            for (int j = list.size() - 1; j > i; j--) {
-//                if (list.get(j).getSevenDay().equals(list.get(i).getSevenDay())) {
-//                    if (list.get(j).getNum() > list.get(i).getNum()) {
-//                        list.remove(i);
-//                    } else {
-//                        list.remove(j);
-//                    }
-//                }
+//        for (PortrayQuery query : result) {
+//            if (query.getType().equals("2020-12-15")){
+//                score0 = 1;
+//                map.put("score0", score0);
+//            }else if (query.getType().equals("2020-12-16")){
+//                score0 = 2;
+//                map.put("score1", score0);
 //            }
 //        }
 //
-//        list.forEach(student -> {
-//            System.out.println(student);
-//        });
+//        System.out.println(map.toString());
+//        Map daySevenRange =  DateUtils.getDaySevenRange();
+//        System.out.println(daySevenRange.get("startDate"));
 
-//        list.remove(0);
-//        String s = list.toString();
-//        System.out.println(s);
-        Integer score0 = 0;
+        long s1 = 24;
+        System.out.println(string(s1));
+        System.out.println(s1+"");
 
-        for (PortrayQuery query : result) {
-            if (query.getType().equals("2020-12-15")){
-                score0 = 1;
-                map.put("score0", score0);
-            }else if (query.getType().equals("2020-12-16")){
-                score0 = 2;
-                map.put("score1", score0);
-            }
-        }
+        PortrayQuery query = new PortrayQuery();
+        PortrayQuery query1 = DateUtils.decideStatisticType(query);
+        System.out.println(query1);
 
-        System.out.println(map.toString());
-
-    }
-
-
-
-    /**获取两个时间节点之间的月份列表**/
-    private static List<String> getMonthBetween(String minDate, String maxDate){
-        ArrayList<String> result = new ArrayList<String>();
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");//格式化为年月
-
-            Calendar min = Calendar.getInstance();
-            Calendar max = Calendar.getInstance();
-            min.setTime(sdf.parse(minDate));
-            min.set(min.get(Calendar.YEAR), min.get(Calendar.MONTH), 1);
-
-            max.setTime(sdf.parse(maxDate));
-            max.set(max.get(Calendar.YEAR), max.get(Calendar.MONTH), 2);
-
-            Calendar curr = min;
-            while (curr.before(max)) {
-                result.add(sdf.format(curr.getTime()));
-                curr.add(Calendar.MONTH, 1);
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        return result;
-    }
-
-
-
-
-    /**
-     * 去除重复数据
-     *
-     * @param list
-     * @return
-     */
-    public static List removeDuplicate(List list) {
-        for (int i = 0; i < list.size() - 1; i++) {
-            for (int j = list.size() - 1; j > i; j--) {
-                if (list.get(j).equals(list.get(i))) {
-                    list.remove(j);
-                }
-            }
-        }
-        return list;
-    }
-
-    /**
-     * 获取近n月/年的时间跨度
-     *
-     * @return
-     */
-    public static String getBetweenTime(Integer n, String type) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        Calendar c = Calendar.getInstance();
-        //过去一月
-        c.setTime(new Date());
-        //判断查询类型
-        switch (type) {
-            //月
-            case "0":
-                c.add(Calendar.MONTH, -n);
-                break;
-            //年
-            case "1":
-                c.add(Calendar.YEAR, -n);
-                break;
-            default:
-        }
-        Date m = c.getTime();
-        String result = format.format(m);
-        return result;
-    }
-
-    public static PortrayQuery decideStatisticType(PortrayQuery query){
-//        query.setDateEnd(getNowString());
-        //判断查询类型
-        String dateStart = getBetweenTime(1, "0");
-//        query.setDateStart(dateStart);
-        return query;
-    }
-
-    public static String getNowString() {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        String result = format.format(new Date());
-        return result;
-    }
-    /**
-     * 判断时间是否在某个区间内
-     *
-     * @param nowTime
-     * @param startTime
-     * @param endTime
-     * @return
-     */
-    public static boolean isEffectiveDate(Date nowTime, Date startTime, Date endTime) {
-        if (nowTime.getTime() == startTime.getTime()
-                || nowTime.getTime() == endTime.getTime()) {
-            return true;
-        }
-
-        Calendar date = Calendar.getInstance();
-        date.setTime(nowTime);
-
-        Calendar begin = Calendar.getInstance();
-        begin.setTime(startTime);
-
-        Calendar end = Calendar.getInstance();
-        end.setTime(endTime);
-
-        if (date.after(begin) && date.before(end)) {
-            return true;
-        } else {
-            return false;
+        if (!"1".equals(null)){
+            System.out.println("true");
         }
     }
+
+
 }

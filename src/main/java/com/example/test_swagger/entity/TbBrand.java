@@ -10,7 +10,8 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class TbBrand {
-    private Integer num;
+    private String  num;
     private String sevenDay;
+    private Integer cc;
 
 }
