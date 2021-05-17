@@ -94,7 +94,7 @@ public class KaiController {
         Pattern pattern = Pattern.compile(regExp);
         String regExp2 = "^([0-9]{3,4})?(-)?[0-9]{7,8}$";//判断座机
         Pattern pattern2 = Pattern.compile(regExp2);
-        Matcher mc = pattern.matcher("19722187902");
+        Matcher mc = pattern.matcher("13722187902");
         Matcher mc2 = pattern2.matcher("0471-8879213");
 
         if ((mc.matches() || mc2.matches())) {
