@@ -3,6 +3,8 @@ package com.example.test_swagger.controller;
 import com.example.test_swagger.commont.ReturnInfo;
 import com.example.test_swagger.entity.TbBrand;
 import com.example.test_swagger.service.KaiService;
+import com.example.test_swagger.utils.DateUtils;
+import com.example.test_swagger.utils.PhoneUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -14,13 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @author shaoqk
@@ -74,34 +70,18 @@ public class KaiController {
         return ReturnInfo.oJ8K().put("result", byName);
     }
 
-    public static List<String> getMonthList(Integer num) {
-        List<String> list = new ArrayList<>();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
-        for (int i = num; i > 0; i--) {
-            Calendar calendar = Calendar.getInstance();
-            //获取当前时间的前6个月
-            calendar.add(Calendar.MONTH, -i);
-            //将calendar装换为Date类型
-            Date date = calendar.getTime();
-            System.out.println(sdf.format(date));
-            list.add(sdf.format(date));
-        }
-        return list;
+
+
+    public static void main(String[] args) {
+        String str = "13722187902";
+        String str1 = "3996906";
+        String str2 = "0471-3996906";
+
+        System.err.println(PhoneUtils.isPhone(str2));
+
+        System.err.println(DateUtils.getBetweenTime(2,"0"));
+
     }
 
-    public static void main(String[] args)  {
-        String regExp = "^0?1[3456789]\\d{9}$";//判断手机号
-        Pattern pattern = Pattern.compile(regExp);
-        String regExp2 = "^([0-9]{3,4})?(-)?[0-9]{7,8}$";//判断座机
-        Pattern pattern2 = Pattern.compile(regExp2);
-        Matcher mc = pattern.matcher("13722187902");
-        Matcher mc2 = pattern2.matcher("0471-8879213");
-
-        if ((mc.matches() || mc2.matches())) {
-            System.out.println("正确");
-        } else {
-            System.err.println("正确");
-        }
-    }
 
 }

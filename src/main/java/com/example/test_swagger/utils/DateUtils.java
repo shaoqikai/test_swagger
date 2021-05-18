@@ -21,40 +21,36 @@ public class DateUtils {
     /**
      * 距离12点还有多长时间的方法
      * 返回当前日期格式化后的字符串
-     *
      * @return 格式化后的日期
      */
     public static long getHours() {
         LocalDateTime midnight = LocalDateTime.now().plusDays(1).withHour(0).withMinute(0).withSecond(0).withNano(0);
-        long hours = ChronoUnit.HOURS.between(LocalDateTime.now(),midnight);
-        if(hours<=0L){
+        long hours = ChronoUnit.HOURS.between(LocalDateTime.now(), midnight);
+        if (hours <= 0L) {
             return 1L;
         }
         return hours;
     }
 
     /**
-     * 获取当前时间去年同月月初
+     * @return 获取当前时间去年同月月初
      */
-    public static String getLastYear(){
-        boolean leapYear = DateUtil.isLeapYear(DateUtil.year(new Date())-1);
+    public static String getLastYear() {
+        boolean leapYear = DateUtil.isLeapYear(DateUtil.year(new Date()) - 1);
         int year = -365;
-        if(leapYear){
+        if (leapYear) {
             year = -366;
         }
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-
         DateTime newDate3 = cn.hutool.core.date.DateUtil.offsetDay(cn.hutool.core.date.DateUtil.beginOfMonth(new Date()), year);
-        String beginDate = format.format(newDate3);
-        return beginDate;
+        return format.format(newDate3);
     }
 
     /**
      * string时间转为Date
-     *
-     * @param time
+     * @param time String 时间
      * @param type 0-年月日时分秒 1-年月日
-     * @return
+     * @return 返回Date类型时间
      */
     public static Date StringChangeDate(String time, String type) {
         SimpleDateFormat sdf;
@@ -74,59 +70,48 @@ public class DateUtils {
 
     /**
      * 判断时间是否超过24小时
-     *
-     * @param date1
-     * @param date2
-     * @return
-     * @throws Exception
+     * @param date1 开始时间
+     * @param date2 结束时间
+     * @return 在区间内返回true
      */
-    public static boolean judgmentDate(Date date1, Date date2) throws Exception {
+    public static boolean judgmentDate(Date date1, Date date2) {
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-        Date start = date1;
-        Date end = date2;
-        long cha = end.getTime() - start.getTime();
+        long cha = date2.getTime() - date1.getTime();
         if (cha < 0) {
             return false;
         }
 
         double result = cha * 1.0 / (1000 * 60 * 60);
 
-        if (result <= 24) {
-            return true;
-        } else {
-            return false;
-        }
+        return result <= 24;
     }
 
     /**
-     * 根据日期获得所在周的日期
-     * @param mdate
-     * @return
+     * @param mdate 入参时间
+     * @return 根据日期获得所在周的日期
      */
     @SuppressWarnings("deprecation")
     public static List<Date> dateToWeek(Date mdate) {
         int b = mdate.getDay();
         Date fdate;
         List<Date> list = new ArrayList<Date>();
-        Long fTime = mdate.getTime() - b * 24 * 3600000;
+        long fTime = mdate.getTime() - (long) b * 24 * 3600000;
         for (int a = 1; a <= 7; a++) {
             fdate = new Date();
             fdate.setTime(fTime + (a * 24 * 3600000));
-            list.add(a-1, fdate);
+            list.add(a - 1, fdate);
         }
         return list;
     }
 
     /**
-     * 获得近一周的开始时间和结束时间
-     *
-     * @return
+     * @return 获得近一周的开始时间和结束时间
      */
-    public static Map getDaySevenRange() {
+    public static Map<String, Object> getDaySevenRange() {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        Map condition = new HashedMap();
+        Map<String, Object> condition = new HashedMap<>();
         Calendar calendar = Calendar.getInstance();
         calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
         calendar.set(Calendar.HOUR_OF_DAY, 24);
@@ -152,10 +137,9 @@ public class DateUtils {
             max.setTime(sdf.parse(maxDate));
             max.set(max.get(Calendar.YEAR), max.get(Calendar.MONTH), 2);
 
-            Calendar curr = min;
-            while (curr.before(max)) {
-                result.add(sdf.format(curr.getTime()));
-                curr.add(Calendar.MONTH, 1);
+            while (min.before(max)) {
+                result.add(sdf.format(min.getTime()));
+                min.add(Calendar.MONTH, 1);
             }
         } catch (ParseException e) {
             e.printStackTrace();
@@ -166,9 +150,8 @@ public class DateUtils {
 
     /**
      * 去除重复数据
-     *
-     * @param list
-     * @return
+     * @param list 入参
+     * @return 返回去重后数据
      */
     public static List removeDuplicate(List list) {
         for (int i = 0; i < list.size() - 1; i++) {
@@ -182,8 +165,9 @@ public class DateUtils {
     }
 
     /**
-     * 获取近n月/年的时间跨度
-     *
+     * 获取近n月/年的时间跨度  例如获取当前时间往前推2个月   n = 2  type = 0
+     * @param n    代表跨度
+     * @param type 0是月 1是年
      * @return
      */
     public static String getBetweenTime(Integer n, String type) {
@@ -204,31 +188,35 @@ public class DateUtils {
             default:
         }
         Date m = c.getTime();
-        String result = format.format(m);
-        return result;
+        return format.format(m);
     }
 
+    /**
+     * @param query type = 0 往前推一个月   type = 1 往前推一年
+     * @return 返回开始时间和结束时间
+     */
     public static PortrayQuery decideStatisticType(PortrayQuery query) {
         query.setDateEnd(getNowString());
         //判断查询类型
-        String dateStart = getBetweenTime(1, "1");
+        String dateStart = getBetweenTime(1, query.getType());
         query.setDateStart(dateStart);
         return query;
     }
 
+    /**
+     * @return 把当前时间转为String
+     */
     public static String getNowString() {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        String result = format.format(new Date());
-        return result;
+        return format.format(new Date());
     }
 
     /**
      * 判断时间是否在某个区间内
-     *
-     * @param nowTime
-     * @param startTime
-     * @param endTime
-     * @return
+     * @param nowTime   现在时间
+     * @param startTime 开始时间
+     * @param endTime   截止时间
+     * @return 在区间内就返回true
      */
     public static boolean isEffectiveDate(Date nowTime, Date startTime, Date endTime) {
         if (nowTime.getTime() == startTime.getTime()
@@ -245,10 +233,25 @@ public class DateUtils {
         Calendar end = Calendar.getInstance();
         end.setTime(endTime);
 
-        if (date.after(begin) && date.before(end)) {
-            return true;
-        } else {
-            return false;
+        return date.after(begin) && date.before(end);
+    }
+
+    /**
+     * @param num 往前推几个月num就是几
+     * @return 获取月份列表
+     */
+    public static List<String> getMonthList(Integer num) {
+        List<String> list = new ArrayList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+        for (int i = num; i > 0; i--) {
+            Calendar calendar = Calendar.getInstance();
+            //获取当前时间的前6个月
+            calendar.add(Calendar.MONTH, -i);
+            //将calendar装换为Date类型
+            Date date = calendar.getTime();
+            System.out.println(sdf.format(date));
+            list.add(sdf.format(date));
         }
+        return list;
     }
 }
