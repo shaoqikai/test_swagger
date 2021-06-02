@@ -3,11 +3,10 @@ package com.example.test_swagger.controller;
 import com.example.test_swagger.commont.ReturnInfo;
 import com.example.test_swagger.entity.TbBrand;
 import com.example.test_swagger.service.KaiService;
-import com.example.test_swagger.utils.DateUtils;
-import com.example.test_swagger.utils.PhoneUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,16 +70,14 @@ public class KaiController {
     }
 
 
-
     public static void main(String[] args) {
-        String str = "13722187902";
-        String str1 = "3996906";
-        String str2 = "0471-3996906";
-
-        System.err.println(PhoneUtils.isPhone(str2));
-
-        System.err.println(DateUtils.getBetweenTime(2,"0"));
-
+        String a = "1,11,20,147,658";
+        String substring = a.substring(2);
+        String[] split = substring.split(",");
+        String join = StringUtils.join(split, "*,*");
+        String path = "*"+join+"*";
+        String replace = path.replace("*", "\"");
+        System.out.println(replace);
     }
 
 
