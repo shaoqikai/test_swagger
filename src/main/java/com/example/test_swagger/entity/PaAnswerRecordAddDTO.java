@@ -3,7 +3,6 @@ package com.example.test_swagger.entity;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 /**
@@ -13,7 +12,7 @@ import java.util.List;
 @Data
 public class PaAnswerRecordAddDTO {
 
-    @NotBlank(message = "user_id不可为空")
+
     @ApiModelProperty(value = "答题人id")
     private String userId;
 
