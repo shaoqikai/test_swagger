@@ -1,12 +1,12 @@
 package com.example.test_swagger.controller;
 
 import com.example.test_swagger.commont.ReturnInfo;
+import com.example.test_swagger.entity.CaseCount;
 import com.example.test_swagger.entity.TbBrand;
 import com.example.test_swagger.service.KaiService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -69,15 +70,44 @@ public class KaiController {
         return ReturnInfo.oJ8K().put("result", byName);
     }
 
-
     public static void main(String[] args) {
-        String a = "1,11,20,147,658";
-        String substring = a.substring(2);
-        String[] split = substring.split(",");
-        String join = StringUtils.join(split, "*,*");
-        String path = "*"+join+"*";
-        String replace = path.replace("*", "\"");
-        System.out.println(replace);
+        int a = 6;
+        int b = 5;
+        CaseCount count = new CaseCount();
+        count.setType("a");
+        count.setCount(a);
+        CaseCount countc = new CaseCount();
+        countc.setType("b");
+        countc.setCount(b);
+        List<CaseCount> list = new ArrayList<>();
+        list.add(count);
+        list.add(countc);
+        System.err.println(biJiao(list));
+
+    }
+
+    /**
+     * @param list 查询的用户下面关联的数量
+     * @return 返回下一个分派的用户编码
+     */
+    private static String biJiao(List<CaseCount> list) {
+        // 创建返回对象
+        String result = "";
+        if (list != null && !list.isEmpty()) {
+            // 当只查询到一条数据时不判断直接派遣
+            if (list.size() == 1) {
+                return list.get(0).getType();
+            }
+            // 多条数据时判断下一个分给谁
+            int count = list.get(0).getCount();
+            for (CaseCount caseCount : list) {
+                if (caseCount.getCount() <= count) {
+                    count = caseCount.getCount();
+                    result = caseCount.getType();
+                }
+            }
+        }
+        return result;
     }
 
 
