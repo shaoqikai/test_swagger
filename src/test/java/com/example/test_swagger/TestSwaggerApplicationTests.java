@@ -3,12 +3,12 @@ package com.example.test_swagger;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.regex.Pattern;
 
 @SpringBootTest
 class TestSwaggerApplicationTests {
@@ -42,35 +42,53 @@ class TestSwaggerApplicationTests {
     void testSplit() {
         String fileName = "姓名：辉辉，出生年月：1999 年 10 月 08 日，性别：1，联系电话：15999696969，身份证或其他有效证件号码：152630199910083636，住址：当事人联系地址，工作单位：工作单位。";
         StringBuilder newName = new StringBuilder();
-        if (fileName.contains("性别")){
+        if (fileName.contains("性别")) {
             String[] split = fileName.split("，");
             for (String s : split) {
-                if (!s.contains("性别")){
+                if (!s.contains("性别")) {
                     newName.append(s).append("，");
                     continue;
-                }else{
-                    if (s.contains("1")){
+                } else {
+                    if (s.contains("1")) {
                         String a = s.replace("1", "男");
                         newName.append(a).append("，");
-                    }else {
+                    } else {
                         String b = s.replace("2", "女");
                         newName.append(b).append("，");
                     }
                 }
             }
             String s = newName.toString();
-            System.err.println(s = s.substring(0, s.length() - 1));
+            System.err.println(s.substring(0, s.length() - 1));
         }
     }
 
     @Test
-    void testJia() {
-        String a = "000000000000000000";
-        String b = "152827199422151218";
-        System.err.println(isCardId(b));
+    void testJia() throws ParseException {
+        sso();
     }
 
-    public static boolean isCardId(String cardid){
-        return Pattern.matches("^[1-9]\\d{5}[1-9]\\d{3}((0\\d)|(1[0-2]))(([0|1|2]\\d)|3[0-1])\\d{3}([\\d|x|X]{1})$", cardid);
+    public Integer sso() throws ParseException {
+        // 获取当前时间
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//        String end = sdf.format(new Date());
+        String end = "2022-01-03";
+        String begin = end.substring(0, end.length() - 2);
+        int assessTime = 4;
+        if (assessTime < 10) {
+            begin = begin + "0" + assessTime;
+        } else {
+            begin = begin + assessTime;
+        }
+        Date bt = sdf.parse(end);
+        Date et = sdf.parse(begin);
+        if (bt.before(et)) {
+            System.out.println(bt + "小于" + et + "不可以修改");
+        } else {
+            System.out.println(bt + "大于" + et + "可以修改");
+
+        }
+        return 1;
     }
+
 }
